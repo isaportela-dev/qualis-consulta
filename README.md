@@ -17,6 +17,7 @@ Algumas funcionalidades podem estar incompletas durante o processo de desenvolvi
 
 ## Estrutura do projeto
 
+```
 qualis-consulta
 │
 ├── app
@@ -29,4 +30,7 @@ qualis-consulta
 ├── data
 │   └── qualis.xlsx
 │
+├── requirements.txt
+├── .gitignore
 └── README.md
+```
