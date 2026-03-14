@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Qualis Consulta</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            background-color: #f7f7f7;
+            color: #222;
+        }
+
+        h1 {
+            margin-bottom: 10px;
+        }
+
+        .container {
+            max-width: 900px;
+            background: white;
+            padding: 24px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        }
+
+        table {
+    border-collapse: collapse;
+    width: 100%;
+    }
+
+        th {
+    background-color: #222;
+    color: white;
+    }
+
+        th, td {
+    padding: 8px;
+    text-align: left;
+    }
+
+        tbody tr:nth-child(even) {
+    background-color: #f2f2f2;
+    }
+
+        .section {
+            margin-bottom: 24px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        input, select, button {
+            padding: 10px;
+            margin-bottom: 12px;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        button {
+            cursor: pointer;
+            background-color: #222;
+            color: white;
+            border: none;
+            border-radius: 6px;
+        }
+
+        button:hover {
+            background-color: #444;
+        }
+
+        pre {
+            background: #f0f0f0;
+            padding: 16px;
+            border-radius: 8px;
+            overflow-x: auto;
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Qualis Consulta</h1>
+        <p>Consulta de periódicos por ISSN, área e estrato.</p>
+
+        <div class="section">
+            <label for="issn">Buscar por ISSN</label>
+            <input type="text" id="issn" placeholder="Ex: 1413-6090">
+            <button onclick="buscarPorIssn()">Buscar ISSN</button>
+        </div>
+
+        <div class="section">
+            <label for="area">Buscar por área</label>
+            <input type="text" id="area" placeholder="Ex: economia">
+            <button onclick="buscarPorArea()">Buscar área</button>
+        </div>
+
+        <div class="section">
+            <label for="stratum">Buscar por estrato</label>
+            <input type="text" id="stratum" placeholder="Ex: A1, B1, C">
+            <button onclick="buscarPorEstrato()">Buscar estrato</button>
+        </div>
+
+        <div class="section">
+            <label for="filterArea">Filtro combinado</label>
+            <input type="text" id="filterArea" placeholder="Área (ex: economia)">
+            <input type="text" id="filterStratum" placeholder="Estrato (ex: B1)">
+            <button onclick="buscarFiltroCombinado()">Filtrar</button>
+        </div>
+
+        <div class="section">
+            <h2>Resultado</h2>
+            <div id="resultado">Os resultados aparecerão aqui.</div>
+        </div>
+    </div>
+
+   <script>
+    function renderizarTabela(dados) {
+        const resultado = document.getElementById("resultado");
+
+        if (!dados || dados.length === 0) {
+            resultado.innerHTML = "<p>Nenhum resultado encontrado.</p>";
+            return;
+        }
+
+        let tabela = `<p><strong>${dados.length}</strong> resultados encontrados</p>`;
+        tabela += `
+            <table border="1" cellpadding="8" cellspacing="0" style="border-collapse: collapse; width: 100%; background: white;">
+                <thead>
+                    <tr>
+                        <th>ISSN</th>
+                        <th>Título</th>
+                        <th>Área de Avaliação</th>
+                        <th>Estrato</th>
+                    </tr>
+                </thead>
+                <tbody>
+        `;
+
+        dados.forEach(item => {
+            tabela += `
+                <tr>
+                    <td>${item.issn ?? ""}</td>
+                    <td>${item["título"] ?? ""}</td>
+                    <td>${item["área de avaliação"] ?? ""}</td>
+                    <td>${item.estrato ?? ""}</td>
+                </tr>
+            `;
+        });
+
+        tabela += `
+                </tbody>
+            </table>
+        `;
+
+        resultado.innerHTML = tabela;
+    }
+
+    async function buscarPorIssn() {
+        const issn = document.getElementById("issn").value;
+        const resposta = await fetch(`/journal/${issn}`);
+        const dados = await resposta.json();
+        renderizarTabela(dados);
+    }
+
+    async function buscarPorArea() {
+        const area = document.getElementById("area").value;
+        const resposta = await fetch(`/journals/by-area/${area}`);
+        const dados = await resposta.json();
+        renderizarTabela(dados);
+    }
+
+    async function buscarPorEstrato() {
+        const stratum = document.getElementById("stratum").value;
+        const resposta = await fetch(`/journals/by-stratum/${stratum}`);
+        const dados = await resposta.json();
+        renderizarTabela(dados);
+    }
+
+    async function buscarFiltroCombinado() {
+        const area = document.getElementById("filterArea").value;
+        const stratum = document.getElementById("filterStratum").value;
+
+        const resposta = await fetch(`/journals/filter?area=${encodeURIComponent(area)}&stratum=${encodeURIComponent(stratum)}`);
+        const dados = await resposta.json();
+        renderizarTabela(dados);
+    }
+</script>
+</body>
+</html>
