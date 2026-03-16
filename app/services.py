@@ -30,3 +30,6 @@ def filter_journals(df, area=None, stratum=None):
     result = result.sort_values("issn")
 
     return result
+
+def get_stratum_distribution(df):
+    return df["estrato"].value_counts().sort_index().to_dict()

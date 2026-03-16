@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from app.data_loader import load_data
-from app.services import get_by_issn, get_all_areas, get_by_area, get_by_stratum, filter_journals
+from app.services import get_by_issn, get_all_areas, get_by_area, get_by_stratum, filter_journals, get_stratum_distribution
 from fastapi.templating import Jinja2Templates
 from fastapi.requests import Request
 
@@ -39,3 +39,7 @@ def journals_by_stratum(stratum: str):
 def journals_filter(area: str = None, stratum: str = None):
     result = filter_journals(df, area, stratum)
     return result.to_dict(orient="records")
+
+@app.get("/stratum-distribution")
+def stratum_distribution():
+    return get_stratum_distribution(df)

@@ -4,6 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Qualis Consulta</title>
+    <div class="section">
+         <h2>Estatísticas</h2>
+         <p>Total de periódicos: <span id="totalJournals">-</span></p>
+         <p>Total de estratos: <span id="totalStrata">-</span></p>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -112,6 +120,11 @@
         </div>
 
         <div class="section">
+             <h2>Distribuição por Estrato</h2>
+             <canvas id="stratumChart"></canvas>
+        </div>
+
+        <div class="section">
             <h2>Resultado</h2>
             <div id="resultado">Os resultados aparecerão aqui.</div>
         </div>
@@ -188,6 +201,64 @@
         const dados = await resposta.json();
         renderizarTabela(dados);
     }
+
+    async function carregarDistribuicaoEstrato() {
+
+    const response = await fetch("/stratum-distribution");
+    const data = await response.json();
+
+    const labels = Object.keys(data);
+    const values = Object.values(data);
+
+    const ctx = document.getElementById("stratumChart");
+
+    new Chart(ctx, {
+        type: "bar",
+        data: {
+            labels: labels,
+            datasets: [{
+                label: "Número de periódicos",
+                data: values,
+                backgroundColor: [
+                    "#1f77b4",
+                    "#2ca02c",
+                    "#ff7f0e",
+                    "#d62728",
+                    "#9467bd",
+                    "#8c564b",
+                    "#e377c2",
+                    "#7f7f7f",
+                    "#bcbd22"
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            }
+        }
+    });
+}
+
+async function carregarEstatisticas() {
+    const response = await fetch("/stratum-distribution");
+    const data = await response.json();
+
+    const totalEstratos = Object.keys(data).length;
+    const totalPeriodicos = Object.values(data).reduce((a, b) => a + b, 0);
+
+    document.getElementById("totalStrata").innerText = totalEstratos;
+    document.getElementById("totalJournals").innerText = totalPeriodicos;
+}
+
+window.onload = function () {
+    carregarDistribuicaoEstrato();
+    carregarEstatisticas();
+};
 </script>
 </body>
 </html>

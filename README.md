@@ -32,6 +32,17 @@ A interface web permite interagir com a API e visualizar os resultados em format
 
 ---
 
+## Features
+
+- Consulta de periódicos por ISSN
+- Consulta por área de avaliação
+- Consulta por estrato
+- Filtro combinado (área + estrato)
+- Visualização da distribuição de estratos
+- Estatísticas do dataset
+
+---
+
 # Estrutura do projeto
 
 ```
