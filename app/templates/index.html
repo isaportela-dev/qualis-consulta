@@ -131,6 +131,10 @@
     </div>
 
    <script>
+     // Funções JavaScript responsáveis por interagir com a API FastAPI
+    // e atualizar dinamicamente a interface web com os resultados das consultas.
+    
+    // Renderiza os resultados retornados pela API em formato de tabela HTML
     function renderizarTabela(dados) {
         const resultado = document.getElementById("resultado");
 
@@ -172,6 +176,7 @@
         resultado.innerHTML = tabela;
     }
 
+    // Realiza uma requisição à API para buscar um periódico pelo ISSN
     async function buscarPorIssn() {
         const issn = document.getElementById("issn").value;
         const resposta = await fetch(`/journal/${issn}`);
@@ -202,6 +207,8 @@
         renderizarTabela(dados);
     }
 
+    // Busca a distribuição de periódicos por estrato na API
+    // e gera um gráfico de barras utilizando Chart.js
     async function carregarDistribuicaoEstrato() {
 
     const response = await fetch("/stratum-distribution");
