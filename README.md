@@ -58,7 +58,7 @@ qualis-consulta
 ### 1. Clonar o repositório
 
 ```bash
-git clone https://github.com/SEU_USUARIO/qualis-consulta.git
+git clone https://github.com/isaportela-dev/qualis-consulta.git
 cd qualis-consulta
 ```
 
