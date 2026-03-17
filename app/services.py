@@ -7,7 +7,7 @@ def get_by_issn(df, issn):
     result = df[df["issn"] == issn]
     return result
 
-
+# Retorna a lista de áreas de avaliação disponíveis no dataset
 def get_all_areas(df):
     return sorted(df["área de avaliação"].dropna().unique().tolist())
 

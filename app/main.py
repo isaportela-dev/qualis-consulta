@@ -16,7 +16,8 @@ templates = Jinja2Templates(directory="app/templates")
 # utilizando a função definida em data_loader.py
 df = load_data()
 
-
+# Endpoint raiz que renderiza a interface web (HTML)
+# Utiliza o template index.html para exibir a página inicial
 @app.get("/")
 def home(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
@@ -34,6 +35,8 @@ def get_journal(issn: str):
 def list_areas():
     return get_all_areas(df)
 
+# Endpoint para buscar periódicos por área de avaliação
+# Retorna todos os periódicos pertencentes à área informada
 @app.get("/journals/by-area/{area}")
 def journals_by_area(area: str):
     result = get_by_area(df, area)
